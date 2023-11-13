@@ -35,14 +35,14 @@ import axios from "axios";
   })}, []);
   function removeBlog(id){
     axios.delete('http://localhost:4000/blogs/remove/'+id).then((res)=>{
-      alert(res.data)
+      alert(res.data);
+      window.location.reload(false);
     })
   }
 
    
    let finalJSX=(
-    <div>
-    return (
+   
       
        <div style={{ margin: "7%" }}>
      
@@ -79,8 +79,7 @@ import axios from "axios";
         
        </div>
     )
-    </div>
-    )
+   
   if(update) finalJSX=<AddPost method="put" data={singleValue}/>
  return (
   

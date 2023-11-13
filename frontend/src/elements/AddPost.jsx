@@ -1,43 +1,46 @@
 import { Button, TextField } from "@mui/material";
 import React, { useEffect, useState } from "react";
+import {redirect} from "react-router-dom";
 import axios from 'axios';
 const AddPost = (props) => {
   const [form,setForm]=useState({
-    title:'',
-    description:'',
-    date_update:Date.now(),
-    image:''
-  });
-  const [upform,setUpForm]=useState({
     title:props.data.title,
     description:props.data.description,
     date_update:Date.now(),
-    image:props.data.image,
+    image:props.data.image
   });
+  // const [upform,setUpForm]=useState({
+  //   title:props.data.title,
+  //   description:props.data.description,
+  //   date_update:Date.now(),
+  //   image:props.data.image,
+  // });
   function submitform(){
-   
+    if(props.method==="put"){
+      axios.put("http://localhost:4000/blogs/edit/"+props.data._id,form)
+      .then((response)=>{
+       
+        if (response.data==="Updated successfully") {
+         alert(response.data)
+          window.location.reload(false);
+    
+          
+        } else {
+          alert("not updated")
+        }
+      })}
+      else{
       axios.post('http://localhost:4000/blogs/add',form).then((res)=>{
         alert(res.data);
-      })
+     
+      })}
    
   }
-  if(props.method==="put"){
-    axios.put("http://localhost:4000/blogs/edit/"+props.data._id,upform)
-    .then((response)=>{
-      // alert(response.data.message)
-      if (response.data.message==="Updated successfully") {
-       alert(response.data.message)
-        window.location.reload(false);
-  
-        
-      } else {
-        alert("not updated")
-      }
-    })}
+ 
     
   return (
     <div style={{ margin: "7% 20% 0 20%" }}>
-      <TextField fullWidth variant="outlined" label="post title" 
+      <TextField fullWidth variant="outlined" value={form.title} label="post title" 
        onChange={(e)=>{
         setForm({...form,title:e.target.value})
       }}/>
@@ -46,6 +49,7 @@ const AddPost = (props) => {
       <TextField
         variant="outlined"
         multiline
+        value={form.description} 
         rows={10}
         fullWidth
         label="Type a post"
@@ -54,7 +58,7 @@ const AddPost = (props) => {
         }}
       />
       <br /><br />
-      <TextField fullWidth variant="outlined" label="Image URL"
+      <TextField fullWidth variant="outlined" value={form.image} label="Image URL"
        onChange={(e)=>{
         setForm({...form,image:e.target.value})
       }} />
